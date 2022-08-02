@@ -1,6 +1,0 @@
-public struct RoboticSnailUtilities {
-    public private(set) var text = "Hello, World!"
-
-    public init() {
-    }
-}
