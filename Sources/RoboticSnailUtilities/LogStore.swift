@@ -9,19 +9,20 @@ import OSLog
 import Foundation
 
 @MainActor public class LogStore: ObservableObject {
-    static let logger = Logger(
+    public init() {}
+    public static let logger = Logger(
         subsystem: Bundle.main.bundleIdentifier!,
         category: "🟢"
     )
-     static let errors = Logger(
+    public static let errors = Logger(
         subsystem: Bundle.main.bundleIdentifier!,
         category: "🔴"
     )
-     static let info = Logger(
+    public  static let info = Logger(
         subsystem: Bundle.main.bundleIdentifier!,
         category: "🔵"
     )
-     static let warning = Logger(
+    public  static let warning = Logger(
         subsystem: Bundle.main.bundleIdentifier!,
         category: "🟡"
     )
