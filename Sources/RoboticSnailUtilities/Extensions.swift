@@ -45,3 +45,45 @@ extension View {
         }
     }
 }
+extension NSManagedObjectContext {
+    @discardableResult public func savelfNeeded() throws -> Bool {
+        guard hasChanges else {
+            return false
+        }
+        try save()
+        return true
+    }
+}
+extension Array {
+    func split() -> [[Element]] {
+        let ct = self.count
+        let half = ct / 2
+        let leftSplit = self[0 ..< half]
+        let rightSplit = self[half ..< ct]
+        return [Array(leftSplit), Array(rightSplit)]
+    }
+}
+extension Sequence where Iterator.Element: Hashable {
+    func unique() -> [Iterator.Element] {
+        var seen: Set<Iterator.Element> = []
+        return filter { seen.insert($0).inserted }
+    }
+}
+extension Binding where Value == String? {
+    func withDefaultValue(_ fallback: String) -> Binding<String> {
+        return Binding<String>(get: {
+            return self.wrappedValue ?? fallback
+        }) { value in
+            self.wrappedValue = value
+        }
+    }
+}
+extension Binding where Value == Date? {
+    func withDefaultValue(_ fallback: Date) -> Binding<Date> {
+        return Binding<Date>(get: {
+            return self.wrappedValue ?? fallback
+        }) { value in
+            self.wrappedValue = value
+        }
+    }
+}
