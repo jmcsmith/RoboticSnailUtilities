@@ -26,7 +26,7 @@ import Foundation
         subsystem: Bundle.main.bundleIdentifier!,
         category: "🟡"
     )
-    @Published private(set) var entries: [String] = []
+    @Published var entries: [String] = []
 
     func export() {
         do {

@@ -19,7 +19,7 @@ extension TextField {
         }
     }
 }
-extension View {
+public extension View {
     /// Hide or show the view based on a boolean value.
     ///
     /// Example for visibility:
