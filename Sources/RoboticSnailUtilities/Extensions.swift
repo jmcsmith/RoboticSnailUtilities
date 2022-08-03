@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 import CoreData
 
-extension TextField {
+public extension TextField {
     @ViewBuilder
     func editingStyle(if flag: Bool) -> some View {
         if flag {
@@ -45,8 +45,8 @@ public extension View {
         }
     }
 }
-extension NSManagedObjectContext {
-    @discardableResult public func savelfNeeded() throws -> Bool {
+public extension NSManagedObjectContext {
+    @discardableResult func savelfNeeded() throws -> Bool {
         guard hasChanges else {
             return false
         }
@@ -54,7 +54,7 @@ extension NSManagedObjectContext {
         return true
     }
 }
-extension Array {
+public extension Array {
     func split() -> [[Element]] {
         let ct = self.count
         let half = ct / 2
@@ -63,13 +63,13 @@ extension Array {
         return [Array(leftSplit), Array(rightSplit)]
     }
 }
-extension Sequence where Iterator.Element: Hashable {
+public extension Sequence where Iterator.Element: Hashable {
     func unique() -> [Iterator.Element] {
         var seen: Set<Iterator.Element> = []
         return filter { seen.insert($0).inserted }
     }
 }
-extension Binding where Value == String? {
+public extension Binding where Value == String? {
     func withDefaultValue(_ fallback: String) -> Binding<String> {
         return Binding<String>(get: {
             return self.wrappedValue ?? fallback
@@ -78,7 +78,7 @@ extension Binding where Value == String? {
         }
     }
 }
-extension Binding where Value == Date? {
+public extension Binding where Value == Date? {
     func withDefaultValue(_ fallback: Date) -> Binding<Date> {
         return Binding<Date>(get: {
             return self.wrappedValue ?? fallback

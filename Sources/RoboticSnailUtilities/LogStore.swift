@@ -28,7 +28,7 @@ import Foundation
     )
     @Published public var entries: [String] = []
 
-    func export() {
+    public func export() {
         do {
             let store = try OSLogStore(scope: .currentProcessIdentifier)
             let date = Date.now.addingTimeInterval(-24 * 3600)
