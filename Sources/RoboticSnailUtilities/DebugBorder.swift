@@ -8,10 +8,10 @@
 import Foundation
 import SwiftUI
 
-struct DebugBorder: ViewModifier {
+public struct DebugBorder: ViewModifier {
     let color: Color
     
-    func body(content: Content) -> some View {
+    public func body(content: Content) -> some View {
         content.overlay(Rectangle().stroke(color))
     }
 }
