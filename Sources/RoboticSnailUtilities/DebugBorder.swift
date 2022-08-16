@@ -16,7 +16,7 @@ public struct DebugBorder: ViewModifier {
     }
 }
 
-extension View {
+public extension View {
     func debugBorder(color: Color = .blue) -> some View {
         #if DEBUG
         return self.overlay(Rectangle().stroke(color))
