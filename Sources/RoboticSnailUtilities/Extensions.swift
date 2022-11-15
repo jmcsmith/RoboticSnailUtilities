@@ -87,3 +87,12 @@ public extension Binding where Value == Date? {
         }
     }
 }
+public extension Binding {
+    func withDefault<T>(_ defaultValue: T) -> Binding<T> where Value == Optional<T> {
+        return Binding<T>(get: {
+            self.wrappedValue ?? defaultValue
+        }, set: { newValue in
+            self.wrappedValue = newValue
+        })
+    }
+}
