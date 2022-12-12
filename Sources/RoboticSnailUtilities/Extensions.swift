@@ -96,7 +96,7 @@ public extension Binding {
         })
     }
 }
-extension Date {
+public extension Date {
     func dayOfWeek() -> String? {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "EEEE"
