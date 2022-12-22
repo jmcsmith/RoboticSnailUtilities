@@ -125,7 +125,7 @@ public extension UIImage {
         return normalizedImage
     }
 }
-extension Double {
+public extension Double {
   func asString(style: DateComponentsFormatter.UnitsStyle) -> String {
     let formatter = DateComponentsFormatter()
     formatter.allowedUnits = [.hour, .minute, .second, .nanosecond]
