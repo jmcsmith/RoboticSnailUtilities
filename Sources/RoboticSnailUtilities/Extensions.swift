@@ -134,7 +134,7 @@ public extension Double {
   }
 }
 extension Color {
-    init?(hex: String) {
+    public init?(hex: String) {
         var hexSanitized = hex.trimmingCharacters(in: .whitespacesAndNewlines)
         hexSanitized = hexSanitized.replacingOccurrences(of: "#", with: "")
 
@@ -166,7 +166,7 @@ extension Color {
 
         self.init(red: r, green: g, blue: b, opacity: a)
     }
-    func toHex() -> String? {
+    public func toHex() -> String? {
           let uic = UIColor(self)
           guard let components = uic.cgColor.components, components.count >= 3 else {
               return nil
