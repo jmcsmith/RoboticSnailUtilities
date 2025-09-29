@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct AppIconRow: View {
+public struct AppIconRow: View {
     let option: AppIconOption
     @Binding var selectedIconName: String?
     
@@ -16,7 +16,7 @@ struct AppIconRow: View {
         selectedIconName == option.alternateIconName
     }
     
-    var body: some View {
+    public var body: some View {
         
         HStack {
             Image(option.lightPreview)
@@ -25,6 +25,12 @@ struct AppIconRow: View {
                 .cornerRadius(8)
             if let darkPreview = option.darkPreview {
                 Image(darkPreview)
+                    .resizable()
+                    .frame(width: 40, height: 40)
+                    .cornerRadius(8)
+            }
+            if let monoPreview = option.monoPreview {
+                Image(monoPreview)
                     .resizable()
                     .frame(width: 40, height: 40)
                     .cornerRadius(8)
@@ -45,9 +51,6 @@ struct AppIconRow: View {
         .onTapGesture {
             setIcon()
         }
-        //            .frame(maxWidth: .infinity, alignment: .leading)
-        //            .contentShape(Rectangle())
-        
     }
     
     private func setIcon() {

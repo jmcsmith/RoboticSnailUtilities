@@ -8,12 +8,12 @@
 
 import SwiftUI
 
-struct AppIconPicker: View {
+public struct AppIconPicker: View {
     @Binding var selectedIconName: String?
     let options: [AppIconOption]
     let sectionName: String
 
-    var body: some View {
+    public var body: some View {
         Section(header: Text(sectionName)) {
             ForEach(options) { option in
                 AppIconRow(option: option, selectedIconName: $selectedIconName)
