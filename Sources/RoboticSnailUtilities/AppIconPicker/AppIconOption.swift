@@ -22,4 +22,19 @@ public struct AppIconOption: Identifiable, Equatable {
     let monoPreview: String?
     /// Alternate icon name from your Info.plist (nil for the primary/original icon)
     let alternateIconName: String?
+    
+    // MARK: - Init
+    public init(
+        title: String,
+        lightPreview: String,
+        darkPreview: String? = nil,
+        monoPreview: String? = nil,
+        alternateIconName: String? = nil
+    ) {
+        self.title = title
+        self.lightPreview = lightPreview
+        self.darkPreview = darkPreview
+        self.monoPreview = monoPreview
+        self.alternateIconName = alternateIconName
+    }
 }
