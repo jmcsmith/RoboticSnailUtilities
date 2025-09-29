@@ -13,6 +13,12 @@ public struct AppIconPicker: View {
     let options: [AppIconOption]
     let sectionName: String
 
+    public init(selectedIconName: Binding<String?>, options: [AppIconOption], sectionName: String) {
+        self._selectedIconName = selectedIconName
+        self.options = options
+        self.sectionName = sectionName
+    }
+
     public var body: some View {
         Section(header: Text(sectionName)) {
             ForEach(options) { option in
@@ -21,4 +27,5 @@ public struct AppIconPicker: View {
         }
         .animation(.default, value: selectedIconName)
     }
+    
 }

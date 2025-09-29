@@ -12,6 +12,11 @@ public struct AppIconRow: View {
     let option: AppIconOption
     @Binding var selectedIconName: String?
     
+    public init(option: AppIconOption, selectedIconName: Binding<String?>) {
+        self.option = option
+        self._selectedIconName = selectedIconName
+    }
+    
     var isSelected: Bool {
         selectedIconName == option.alternateIconName
     }
@@ -63,3 +68,4 @@ public struct AppIconRow: View {
         selectedIconName = target
     }
 }
+
