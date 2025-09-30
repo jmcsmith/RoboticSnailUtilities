@@ -11,6 +11,8 @@ import SwiftUI
 public struct DebugBorder: ViewModifier {
     let color: Color
     
+    public init(color: Color) { self.color = color }
+    
     public func body(content: Content) -> some View {
         content.overlay(Rectangle().stroke(color))
     }
@@ -25,3 +27,4 @@ public extension View {
         #endif
     }
 }
+

@@ -46,7 +46,7 @@ public extension View {
     }
 }
 public extension NSManagedObjectContext {
-    @discardableResult func savelfNeeded() throws -> Bool {
+    @discardableResult func saveIfNeeded() throws -> Bool {
         guard hasChanges else {
             return false
         }
@@ -55,12 +55,11 @@ public extension NSManagedObjectContext {
     }
 }
 public extension Array {
-    func split() -> [[Element]] {
-        let ct = self.count
-        let half = ct / 2
-        let leftSplit = self[0 ..< half]
-        let rightSplit = self[half ..< ct]
-        return [Array(leftSplit), Array(rightSplit)]
+    func halves() -> ([Element], [Element]) {
+        let half = count / 2
+        let left = Array(self[..<half])
+        let right = Array(self[half...])
+        return (left, right)
     }
 }
 public extension Sequence where Iterator.Element: Hashable {
@@ -97,11 +96,10 @@ public extension Binding {
     }
 }
 public extension Date {
-    func dayOfWeek() -> String? {
+    func dayOfWeek() -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "EEEE"
         return dateFormatter.string(from: self).capitalized
-        // or use capitalized(with: locale) if you want
     }
 }
 public extension Float {
@@ -133,8 +131,8 @@ public extension Double {
     return formatter.string(from: self) ?? ""
   }
 }
-extension Color {
-    public init?(hex: String) {
+public extension Color {
+    init?(hex: String) {
         var hexSanitized = hex.trimmingCharacters(in: .whitespacesAndNewlines)
         hexSanitized = hexSanitized.replacingOccurrences(of: "#", with: "")
 
@@ -166,7 +164,7 @@ extension Color {
 
         self.init(red: r, green: g, blue: b, opacity: a)
     }
-    public func toHex() -> String? {
+    func toHex() -> String? {
           let uic = UIColor(self)
           guard let components = uic.cgColor.components, components.count >= 3 else {
               return nil

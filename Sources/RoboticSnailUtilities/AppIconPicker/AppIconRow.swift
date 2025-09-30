@@ -7,6 +7,7 @@
 
 
 import SwiftUI
+import UIKit
 
 public struct AppIconRow: View {
     let option: AppIconOption
@@ -58,7 +59,7 @@ public struct AppIconRow: View {
         }
     }
     
-    private func setIcon() {
+    @MainActor private func setIcon() {
         // Primary icon is set with `nil`
         let target = option.alternateIconName
         UIApplication.shared.setAlternateIconName(target) { error in

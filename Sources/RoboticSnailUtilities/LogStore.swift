@@ -10,23 +10,24 @@ import Foundation
 
 @MainActor public class LogStore: ObservableObject {
     public init() {}
+    public static let subsystem = Bundle.main.bundleIdentifier ?? "RoboticSnailUtilities"
     public static let logger = Logger(
-        subsystem: Bundle.main.bundleIdentifier!,
+        subsystem: subsystem,
         category: "🟢"
     )
     public static let errors = Logger(
-        subsystem: Bundle.main.bundleIdentifier!,
+        subsystem: subsystem,
         category: "🔴"
     )
     public  static let info = Logger(
-        subsystem: Bundle.main.bundleIdentifier!,
+        subsystem: subsystem,
         category: "🔵"
     )
     public  static let warning = Logger(
-        subsystem: Bundle.main.bundleIdentifier!,
+        subsystem: subsystem,
         category: "🟡"
     )
-    @Published public var entries: [String] = []
+    @Published public private(set) var entries: [String] = []
 
     public func export() {
         do {
@@ -37,10 +38,11 @@ import Foundation
             entries = try store
                 .getEntries(at: position)
                 .compactMap { $0 as? OSLogEntryLog }
-                .filter { $0.subsystem == Bundle.main.bundleIdentifier! }
+                .filter { $0.subsystem == Self.subsystem }
                 .map { "\($0.category) - [\($0.date.formatted())] \($0.composedMessage)" }
         } catch {
             Self.logger.warning("\(error.localizedDescription, privacy: .public)")
         }
     }
 }
+
