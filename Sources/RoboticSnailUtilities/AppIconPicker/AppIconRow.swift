@@ -41,7 +41,14 @@ public struct AppIconRow: View {
                     .frame(width: 40, height: 40)
                     .cornerRadius(8)
             }
-            Text(option.title)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(option.title)
+                if let subtitle = option.subtitle {
+                    Text(subtitle)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+            }
             
             Spacer()
             
