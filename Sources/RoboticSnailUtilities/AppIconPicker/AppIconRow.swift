@@ -9,11 +9,10 @@
 import SwiftUI
 import UIKit
 
-@MainActor private enum AppIconChangeLock {
-    static var isChangingIcon = false
-}
+
 
 public struct AppIconRow: View {
+    @MainActor private static var iconChangeInFlight = false
     let option: AppIconOption
     @Binding var selectedIconName: String?
     
@@ -27,87 +26,73 @@ public struct AppIconRow: View {
     }
     
     public var body: some View {
-        
-        HStack {
-            Image(option.lightPreview)
-                .resizable()
-                .frame(width: 40, height: 40)
-                .cornerRadius(8)
-            if let darkPreview = option.darkPreview {
-                Image(darkPreview)
+        Button(action: setIcon) {
+            HStack {
+                Image(option.lightPreview)
                     .resizable()
                     .frame(width: 40, height: 40)
                     .cornerRadius(8)
-            }
-            if let monoPreview = option.monoPreview {
-                Image(monoPreview)
-                    .resizable()
-                    .frame(width: 40, height: 40)
-                    .cornerRadius(8)
-            }
-            VStack(alignment: .leading, spacing: 2) {
-                Text(option.title)
-                if let subtitle = option.subtitle {
-                    Text(subtitle)
-                        .font(.caption)
-                        .foregroundColor(.secondary)
+                if let darkPreview = option.darkPreview {
+                    Image(darkPreview)
+                        .resizable()
+                        .frame(width: 40, height: 40)
+                        .cornerRadius(8)
+                }
+                if let monoPreview = option.monoPreview {
+                    Image(monoPreview)
+                        .resizable()
+                        .frame(width: 40, height: 40)
+                        .cornerRadius(8)
+                }
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(option.title)
+                    if let subtitle = option.subtitle {
+                        Text(subtitle)
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
+                
+                Spacer()
+                
+                if isSelected {
+                    Image(systemName: "checkmark")
+                        .imageScale(.medium)
+                        .font(.body.weight(.semibold))
+                        .transition(.opacity)
                 }
             }
             
-            Spacer()
-            
-            if isSelected {
-                Image(systemName: "checkmark")
-                    .imageScale(.medium)
-                    .font(.body.weight(.semibold))
-                    .transition(.opacity)
-            }
+            .frame(maxWidth: .infinity)
+            .contentShape(Rectangle())
         }
-        .frame(maxWidth: .infinity)
-        .contentShape(Rectangle())
-        .onTapGesture {
-            setIcon()
-        }
+        .buttonStyle(.plain)
     }
     
     @MainActor private func setIcon() {
-        // Primary icon is set with `nil`
+        let app = UIApplication.shared
         let target = option.alternateIconName
-
-        guard !AppIconChangeLock.isChangingIcon else { return }
-        guard target != UIApplication.shared.alternateIconName else { return }
-
-        AppIconChangeLock.isChangingIcon = true
-        UIApplication.shared.setAlternateIconName(target) { error in
+        
+        guard app.supportsAlternateIcons else { return }
+        guard app.applicationState == .active else { return }
+        guard target != app.alternateIconName else {
+            selectedIconName = target
+            return
+        }
+        guard !Self.iconChangeInFlight else { return }
+        
+        Self.iconChangeInFlight = true
+        app.setAlternateIconName(target) { error in
             Task { @MainActor in
-                defer { AppIconChangeLock.isChangingIcon = false }
-
-                if let error {
-                    let nsError = error as NSError
-                    print("Failed to set app icon")
-                    print("targetIcon: \(target ?? "primary")")
-                    print("description: \(error.localizedDescription)")
-                    print("debugDescription: \(String(describing: error))")
-                    print("domain: \(nsError.domain)")
-                    print("code: \(nsError.code)")
-                    print("failureReason: \(nsError.localizedFailureReason ?? "nil")")
-                    print("recoverySuggestion: \(nsError.localizedRecoverySuggestion ?? "nil")")
-                    print("recoveryOptions: \(nsError.localizedRecoveryOptions?.joined(separator: ", ") ?? "nil")")
-                    print("helpAnchor: \(nsError.helpAnchor ?? "nil")")
-                    if nsError.userInfo.isEmpty {
-                        print("userInfo: empty")
-                    } else {
-                        print("userInfo:")
-                        for (key, value) in nsError.userInfo {
-                            print("  \(key): \(String(describing: value))")
-                        }
-                    }
-                    return
+                Self.iconChangeInFlight = false
+                if error == nil {
+                    selectedIconName = target
+                } else {
+                    selectedIconName = app.alternateIconName
                 }
-
-                selectedIconName = target
             }
         }
     }
+    
 }
 
