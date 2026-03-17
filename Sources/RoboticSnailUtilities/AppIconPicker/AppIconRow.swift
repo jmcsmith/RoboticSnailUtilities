@@ -70,10 +70,30 @@ public struct AppIconRow: View {
         // Primary icon is set with `nil`
         let target = option.alternateIconName
         UIApplication.shared.setAlternateIconName(target) { error in
-            // Optional: handle/log error
-            // print(error?.localizedDescription ?? "Icon set")
+            if let error {
+                let nsError = error as NSError
+                print("Failed to set app icon")
+                print("targetIcon: \(target ?? "primary")")
+                print("description: \(error.localizedDescription)")
+                print("debugDescription: \(String(describing: error))")
+                print("domain: \(nsError.domain)")
+                print("code: \(nsError.code)")
+                print("failureReason: \(nsError.localizedFailureReason ?? "nil")")
+                print("recoverySuggestion: \(nsError.localizedRecoverySuggestion ?? "nil")")
+                print("recoveryOptions: \(nsError.localizedRecoveryOptions?.joined(separator: ", ") ?? "nil")")
+                print("helpAnchor: \(nsError.helpAnchor ?? "nil")")
+                if nsError.userInfo.isEmpty {
+                    print("userInfo: empty")
+                } else {
+                    print("userInfo:")
+                    for (key, value) in nsError.userInfo {
+                        print("  \(key): \(String(describing: value))")
+                    }
+                }
+                return
+            }
+            selectedIconName = target
         }
-        selectedIconName = target
     }
 }
 
