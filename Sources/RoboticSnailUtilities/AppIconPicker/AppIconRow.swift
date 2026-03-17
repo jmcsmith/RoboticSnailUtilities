@@ -9,10 +9,13 @@
 import SwiftUI
 import UIKit
 
+@MainActor private enum AppIconChangeLock {
+    static var isChangingIcon = false
+}
+
 public struct AppIconRow: View {
     let option: AppIconOption
     @Binding var selectedIconName: String?
-    @State private var isChangingIcon = false
     
     public init(option: AppIconOption, selectedIconName: Binding<String?>) {
         self.option = option
@@ -71,13 +74,13 @@ public struct AppIconRow: View {
         // Primary icon is set with `nil`
         let target = option.alternateIconName
 
-        guard !isChangingIcon else { return }
+        guard !AppIconChangeLock.isChangingIcon else { return }
         guard target != UIApplication.shared.alternateIconName else { return }
 
-        isChangingIcon = true
+        AppIconChangeLock.isChangingIcon = true
         UIApplication.shared.setAlternateIconName(target) { error in
             Task { @MainActor in
-                defer { isChangingIcon = false }
+                defer { AppIconChangeLock.isChangingIcon = false }
 
                 if let error {
                     let nsError = error as NSError
