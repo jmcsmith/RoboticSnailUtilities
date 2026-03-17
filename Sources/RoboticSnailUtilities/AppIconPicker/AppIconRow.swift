@@ -12,6 +12,7 @@ import UIKit
 public struct AppIconRow: View {
     let option: AppIconOption
     @Binding var selectedIconName: String?
+    @State private var isChangingIcon = false
     
     public init(option: AppIconOption, selectedIconName: Binding<String?>) {
         self.option = option
@@ -69,30 +70,40 @@ public struct AppIconRow: View {
     @MainActor private func setIcon() {
         // Primary icon is set with `nil`
         let target = option.alternateIconName
+
+        guard !isChangingIcon else { return }
+        guard target != UIApplication.shared.alternateIconName else { return }
+
+        isChangingIcon = true
         UIApplication.shared.setAlternateIconName(target) { error in
-            if let error {
-                let nsError = error as NSError
-                print("Failed to set app icon")
-                print("targetIcon: \(target ?? "primary")")
-                print("description: \(error.localizedDescription)")
-                print("debugDescription: \(String(describing: error))")
-                print("domain: \(nsError.domain)")
-                print("code: \(nsError.code)")
-                print("failureReason: \(nsError.localizedFailureReason ?? "nil")")
-                print("recoverySuggestion: \(nsError.localizedRecoverySuggestion ?? "nil")")
-                print("recoveryOptions: \(nsError.localizedRecoveryOptions?.joined(separator: ", ") ?? "nil")")
-                print("helpAnchor: \(nsError.helpAnchor ?? "nil")")
-                if nsError.userInfo.isEmpty {
-                    print("userInfo: empty")
-                } else {
-                    print("userInfo:")
-                    for (key, value) in nsError.userInfo {
-                        print("  \(key): \(String(describing: value))")
+            Task { @MainActor in
+                defer { isChangingIcon = false }
+
+                if let error {
+                    let nsError = error as NSError
+                    print("Failed to set app icon")
+                    print("targetIcon: \(target ?? "primary")")
+                    print("description: \(error.localizedDescription)")
+                    print("debugDescription: \(String(describing: error))")
+                    print("domain: \(nsError.domain)")
+                    print("code: \(nsError.code)")
+                    print("failureReason: \(nsError.localizedFailureReason ?? "nil")")
+                    print("recoverySuggestion: \(nsError.localizedRecoverySuggestion ?? "nil")")
+                    print("recoveryOptions: \(nsError.localizedRecoveryOptions?.joined(separator: ", ") ?? "nil")")
+                    print("helpAnchor: \(nsError.helpAnchor ?? "nil")")
+                    if nsError.userInfo.isEmpty {
+                        print("userInfo: empty")
+                    } else {
+                        print("userInfo:")
+                        for (key, value) in nsError.userInfo {
+                            print("  \(key): \(String(describing: value))")
+                        }
                     }
+                    return
                 }
-                return
+
+                selectedIconName = target
             }
-            selectedIconName = target
         }
     }
 }
