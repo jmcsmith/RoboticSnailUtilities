@@ -45,6 +45,41 @@ Form {
 
 Note: Alternate icons must be declared in your app’s Info.plist under `CFBundleIcons`.
 
+### Onboarding Flow (SwiftUI)
+
+Use a reusable, data-driven onboarding UI with page indicators and built-in next/finish behavior.
+
+- `OnboardingFlowView`: Main reusable onboarding container
+- `OnboardingPage`: Page model with title, optional symbol, tint color, and feature list
+- `OnboardingFeature`: Bullet-row model containing icon, title, and message
+
+Example:
+
+```swift
+@State private var isOnboardingCompleted = false
+
+private let onboardingPages: [OnboardingPage] = [
+    OnboardingPage(
+        title: "Welcome to Rail Roster",
+        tint: .blue,
+        features: [
+            OnboardingFeature(
+                icon: "train.side.front.car",
+                title: "Organize Your Fleet",
+                message: "Track locomotives, rolling stock, and accessories in one collection."
+            ),
+            OnboardingFeature(
+                icon: "line.3.horizontal.decrease.circle",
+                title: "Filter Faster",
+                message: "Quickly narrow your roster by railroad, status, and ownership."
+            )
+        ]
+    )
+]
+
+OnboardingFlowView(isCompleted: $isOnboardingCompleted, pages: onboardingPages)
+```
+
 ### Debug Border
 
 Debug-only view borders for layout inspection:
