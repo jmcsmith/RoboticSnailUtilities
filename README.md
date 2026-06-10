@@ -5,7 +5,7 @@ SwiftUI-focused utilities for iOS apps, distributed as a Swift Package.
 ## Requirements
 
 - iOS 18.0+ (as declared in `Package.swift`)
-- Swift tools version 5.6+
+- Swift tools version 6.0+ (the package builds in Swift 6 language mode)
 
 ## Installation (Swift Package Manager)
 
@@ -121,24 +121,6 @@ SupportLinksSections(
 )
 ```
 
-### LogStore
-
-`@MainActor` observable log store that exports recent OSLog messages from the current process.
-
-```swift
-@StateObject private var logStore = LogStore()
-
-logStore.export()
-print(logStore.entries)
-```
-
-Preconfigured loggers:
-
-- `LogStore.logger`
-- `LogStore.info`
-- `LogStore.warning`
-- `LogStore.errors`
-
 ### Debug Border
 
 Debug-only border overlay for layout inspection:
@@ -152,13 +134,17 @@ Text("Hello")
 
 The package also includes convenience extensions for:
 
-- `TextField.editingStyle(if:)`
+- `TextField.editingStyle(if:)` — rounded-border look that keeps the field's identity (and keyboard) stable when toggled
 - `View.isHidden(_:remove:)`
 - `NSManagedObjectContext.saveIfNeeded()`
 - `Array.halves()` and `Sequence.unique()`
-- Optional `Binding` default-value helpers
+- `Binding.withDefault(_:)` — bridge an optional binding to a non-optional one
 - `Date.dayOfWeek()`
 - `Float.clean`
 - `Double.asString(style:)`
-- `Color(hex:)` and `Color.toHex()`
+- `Color(hex:)` (supports `RGB`, `RRGGBB`, and `RRGGBBAA`) and `Color.toHex()`
 - `UIImage.fixOrientation()`
+
+### Localization note
+
+Built-in strings ("Social", "About", "Version", "Build", "Continue", "Get Started", and the onboarding accessibility labels) are `LocalizedStringKey`s resolved against your app's main bundle, so you can localize them by adding those keys to your app's strings catalog — or pass your own strings through the corresponding parameters.

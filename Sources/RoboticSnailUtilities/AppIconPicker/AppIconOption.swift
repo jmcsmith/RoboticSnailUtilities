@@ -1,17 +1,11 @@
-//
-//  AppIconOption.swift
-//  icons
-//
-//  Created by Joseph Beaudoin on 9/29/25.
-//
-
-
 import SwiftUI
 
 // MARK: - Model
 
-public struct AppIconOption: Identifiable, Equatable {
-    public let id = UUID()
+public struct AppIconOption: Identifiable, Equatable, Sendable {
+    /// Stable, content-derived identity so options can be rebuilt in a view
+    /// body without breaking ForEach diffing or animations.
+    public var id: String { alternateIconName ?? title }
     /// Display name in the row (e.g., "Green Icon")
     public let title: String
     /// Optional secondary text shown under the title
@@ -24,7 +18,7 @@ public struct AppIconOption: Identifiable, Equatable {
     public let monoPreview: String?
     /// Alternate icon name from your Info.plist (nil for the primary/original icon)
     public let alternateIconName: String?
-    
+
     // MARK: - Init
     public init(
         title: String,
@@ -42,4 +36,3 @@ public struct AppIconOption: Identifiable, Equatable {
         self.alternateIconName = alternateIconName
     }
 }
-

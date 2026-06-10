@@ -28,26 +28,23 @@ struct OnboardingFlowFooterView: View {
             .accessibilityElement(children: .ignore)
             .accessibilityLabel("Onboarding progress")
             .accessibilityValue("Page \(selectedPage + 1) of \(pageCount)")
+            .accessibilityAdjustableAction { direction in
+                switch direction {
+                case .increment:
+                    guard selectedPage < pageCount - 1 else { break }
+                    selectedPage += 1
+                case .decrement:
+                    guard selectedPage > 0 else { break }
+                    selectedPage -= 1
+                @unknown default:
+                    break
+                }
+            }
 
             Button(action: advance) {
                 Text(isLastPage ? completionButtonTitle : continueButtonTitle)
-                    .font(.headline)
-                    .foregroundStyle(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 16)
             }
-            .background(
-                LinearGradient(
-                    colors: [tint.opacity(1.0), tint.opacity(0.78)],
-                    startPoint: .leading,
-                    endPoint: .trailing
-                ),
-                in: Capsule(style: .continuous)
-            )
-            .overlay(
-                Capsule(style: .continuous)
-                    .stroke(.primary.opacity(0.14), lineWidth: 1)
-            )
+            .buttonStyle(GradientCapsuleButtonStyle(tint: tint))
         }
     }
 
@@ -64,5 +61,30 @@ struct OnboardingFlowFooterView: View {
                 selectedPage += 1
             }
         }
+    }
+}
+
+private struct GradientCapsuleButtonStyle: ButtonStyle {
+    let tint: Color
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(.headline)
+            .foregroundStyle(.white)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 16)
+            .background(
+                LinearGradient(
+                    colors: [tint.opacity(1.0), tint.opacity(0.78)],
+                    startPoint: .leading,
+                    endPoint: .trailing
+                ),
+                in: Capsule(style: .continuous)
+            )
+            .overlay(
+                Capsule(style: .continuous)
+                    .stroke(.primary.opacity(0.14), lineWidth: 1)
+            )
+            .opacity(configuration.isPressed ? 0.8 : 1)
     }
 }

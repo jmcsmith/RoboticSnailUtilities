@@ -43,7 +43,7 @@ public struct OnboardingFlowView: View {
             } else {
                 VStack(spacing: 0) {
                     TabView(selection: $selectedPage) {
-                        ForEach(Array(pages.enumerated()), id: \.element.id) { index, page in
+                        ForEach(Array(pages.enumerated()), id: \.offset) { index, page in
                             OnboardingPageCardView(page: page)
                                 .tag(index)
                                 .padding(.horizontal, 22)
@@ -57,7 +57,7 @@ public struct OnboardingFlowView: View {
                     OnboardingFlowFooterView(
                         selectedPage: $selectedPage,
                         pageCount: pages.count,
-                        tint: pages[selectedPage].tint,
+                        tint: pages[min(selectedPage, pages.count - 1)].tint,
                         continueButtonTitle: continueButtonTitle,
                         completionButtonTitle: completionButtonTitle,
                         onComplete: complete
@@ -94,8 +94,10 @@ private struct EmptyOnboardingStateView: View {
 }
 
 #Preview {
+    @Previewable @State var isCompleted = false
+
     OnboardingFlowView(
-        isCompleted: .constant(false),
+        isCompleted: $isCompleted,
         pages: [
             OnboardingPage(
                 title: "Welcome",

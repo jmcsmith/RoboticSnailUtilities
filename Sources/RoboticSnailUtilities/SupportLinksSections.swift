@@ -1,20 +1,20 @@
 import SwiftUI
 
-public struct SocialLinkItem: Identifiable, Hashable {
+public struct SocialLinkItem: Identifiable, Hashable, Sendable {
     public let id: String
     public let title: String
     public let imageName: String
     public let url: URL?
 
     public init(id: String? = nil, title: String, imageName: String, url: URL?) {
-        self.id = id ?? title
+        self.id = id ?? title + (url?.absoluteString ?? "")
         self.title = title
         self.imageName = imageName
         self.url = url
     }
 }
 
-public struct AboutLinkItem: Identifiable, Hashable {
+public struct AboutLinkItem: Identifiable, Hashable, Sendable {
     public let id: String
     public let title: String
     public let systemImageName: String
@@ -28,7 +28,7 @@ public struct AboutLinkItem: Identifiable, Hashable {
         tint: Color = .blue,
         url: URL?
     ) {
-        self.id = id ?? title
+        self.id = id ?? title + (url?.absoluteString ?? "")
         self.title = title
         self.systemImageName = systemImageName
         self.tint = tint
@@ -76,17 +76,15 @@ public struct SupportLinksSections: View {
 
     @ViewBuilder
     private var socialSection: some View {
-        Section(header: Text(socialHeader)) {
+        Section(socialHeader) {
             ForEach(socialLinks) { item in
-                HStack {
-                    Image(item.imageName)
-                        .symbolRenderingMode(.multicolor)
-                        .accessibilityHidden(true)
+                if let url = item.url {
+                    HStack {
+                        Image(item.imageName)
+                            .symbolRenderingMode(.multicolor)
+                            .accessibilityHidden(true)
 
-                    if let url = item.url {
                         Link(item.title, destination: url)
-                    } else {
-                        Text(item.title)
                     }
                 }
             }
@@ -109,7 +107,7 @@ public struct SupportLinksSections: View {
                 Button(reviewButtonTitle, systemImage: reviewButtonSystemImage) {
                     onRequestReview()
                 }
-                .foregroundStyle(.blue)
+                .foregroundStyle(.tint)
             }
 
             if let version {
@@ -122,4 +120,3 @@ public struct SupportLinksSections: View {
         }
     }
 }
-

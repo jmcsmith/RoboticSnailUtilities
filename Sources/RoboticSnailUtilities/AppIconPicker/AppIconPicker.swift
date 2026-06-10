@@ -1,11 +1,3 @@
-//
-//  AppIconPicker.swift
-//  icons
-//
-//  Created by Joseph Beaudoin on 9/29/25.
-//
-
-
 import SwiftUI
 
 public struct AppIconPicker: View {
@@ -20,12 +12,11 @@ public struct AppIconPicker: View {
     }
 
     public var body: some View {
-        Section(header: Text(sectionName)) {
+        Section(sectionName) {
             ForEach(options) { option in
                 AppIconRow(option: option, selectedIconName: $selectedIconName)
             }
         }
         .animation(.default, value: selectedIconName)
     }
-    
 }

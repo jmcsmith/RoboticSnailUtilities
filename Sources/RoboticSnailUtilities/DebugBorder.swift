@@ -1,30 +1,24 @@
-//
-//  DebugBorder.swift
-//  
-//
-//  Created by Joe Beaudoin on 8/2/22.
-//
-
-import Foundation
 import SwiftUI
 
+/// Strokes a rectangle over the content. Applied unconditionally; prefer
+/// `View.debugBorder(color:)`, which compiles to nothing outside DEBUG builds.
 public struct DebugBorder: ViewModifier {
     let color: Color
-    
+
     public init(color: Color) { self.color = color }
-    
+
     public func body(content: Content) -> some View {
         content.overlay(Rectangle().stroke(color))
     }
 }
 
 public extension View {
-    func debugBorder(color: Color = .blue) -> some View {
+    /// Debug-only border overlay for layout inspection. No-op in release builds.
+    @ViewBuilder func debugBorder(color: Color = .blue) -> some View {
         #if DEBUG
-        return self.overlay(Rectangle().stroke(color))
+        modifier(DebugBorder(color: color))
         #else
-        return self
+        self
         #endif
     }
 }
-

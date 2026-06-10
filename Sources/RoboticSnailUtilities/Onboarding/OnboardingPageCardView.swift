@@ -9,7 +9,8 @@ struct OnboardingPageCardView: View {
                 if let symbol = page.titleSymbol {
                     Image(systemName: symbol)
                         .font(.title2.weight(.bold))
-                        .foregroundStyle(.yellow)
+                        .foregroundStyle(page.tint)
+                        .accessibilityHidden(true)
                 }
 
                 Text(page.title)
@@ -27,6 +28,7 @@ struct OnboardingPageCardView: View {
                             .foregroundStyle(page.tint)
                             .frame(width: 24)
                             .padding(.top, 2)
+                            .accessibilityHidden(true)
 
                         VStack(alignment: .leading, spacing: 3) {
                             Text(feature.title)
@@ -44,7 +46,6 @@ struct OnboardingPageCardView: View {
 
             Spacer(minLength: 0)
         }
-        .padding(.horizontal, 22)
         .padding(.top, 12)
         .padding(.bottom, 20)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
